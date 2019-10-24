@@ -1,0 +1,60 @@
+<!--<div class="col-md-4">
+    <button class="btn btn-primary btn-block" onclick="md.showNotificationCustom('top','center', 'Error! Game currently unavailable. Please check back later. Thanks')">Top Center</button>
+</div>-->
+
+<div class="row">
+    <div class="col-lg-6 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-warning card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">weekend</i>
+                </div>
+                <p class="card-category" id="closes_opens"  style="color: red">Game Open/Closes</p>
+                <h3 class="card-title" style="color: red">
+                    <!--<span id="days">1</span>-->
+                    <span id="hours" class="timecount">0</span>
+                    <span id="minutes"  class="timecount">0</span>
+                    <span id="seconds"  class="timecount">0</span>
+                </h3>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                   <!-- <i class="material-icons text-danger">warning</i>
+                    <a href="#pablo">Get More Space...</a>-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-rose card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">equalizer</i>
+                </div>
+                <p class="card-category">Total Game Played</p>
+                <h3 class="card-title"><%= userData.gameCount %></h3>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                    <!--<i class="material-icons">local_offer</i> Tracked from Google Analytics-->
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-md-6 col-sm-6">
+        <div class="card card-stats">
+            <div class="card-header card-header-success card-header-icon">
+                <div class="card-icon">
+                    <i class="material-icons">store</i>
+                </div>
+                <p class="card-category">Account Balance</p>
+                <h3 class="card-title">&#8358;<span class="accountBalance"><%= userData.data.accountBalanceF %></span></h3>
+            </div>
+            <div class="card-footer">
+                <div class="stats">
+                 <!--   <i class="material-icons">date_range</i> Last 24 Hours-->
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

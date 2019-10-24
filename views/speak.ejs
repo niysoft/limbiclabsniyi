@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+    <% include partials/header_.ejs %>
+    <style>
+        input {
+            padding: 10px;
+        }
+
+        #myrecbtn {
+            cursor: pointer;
+            width: 120px;
+            height: 120px;
+            font-size: 0;
+            background-color: red;
+            border: 0;
+            border-radius: 60px;
+            margin: 18px;
+            outline: none;
+        }
+        .card{
+            height:300px;
+        }
+
+        .notRec {
+            background-color: darkred !important;
+        }
+
+        #rec_status {
+            margin-top: 30px;
+        }
+
+        .Rec {
+            animation-name: pulse;
+            animation-duration: 1.5s;
+            animation-iteration-count: infinite;
+            animation-timing-function: linear;
+        }
+
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0px 0px 5px 0px rgba(173, 0, 0, .3);
+            }
+            65% {
+                box-shadow: 0px 0px 5px 20px rgba(173, 0, 0, .3);
+            }
+            90% {
+                box-shadow: 0px 0px 5px 20px rgba(173, 0, 0, 0);
+            }
+        }
+    </style>
+</head>
+<body class="">
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
+</noscript>
+<div class="wrapper ">
+    <% include partials/sidebar.ejs %>
+    <div class="main-panel">
+        <nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top ">
+            <div class="container-fluid">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="navbar-toggler-icon icon-bar"></span>
+                    <span class="navbar-toggler-icon icon-bar"></span>
+                    <span class="navbar-toggler-icon icon-bar"></span>
+                </button>
+            </div>
+        </nav>
+        <div class="content" style="margin-top: 0;">
+            <div class="container-fluid">
+                <button class="btn card-header-primary"
+                        style="width:100%;text-align: left;font-size: 22px;text-transform: none;background: #d81b60;">
+                    Simple Speech to Text Application
+                    <div class="ripple-container"></div>
+                </button>
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header card-header-rose card-header-icon">
+                                    <div class="card-icon">
+                                        <i class="material-icons">contacts</i>
+                                    </div>
+                                    <h4 class="card-title">Click the Circle to start Recording</h4>
+                                </div>
+                                <div class="card-body ">
+                                    <audio></audio>
+                                    <div style="text-align: center">
+                                        <button class="notRec" id="myrecbtn"></button>
+                                        <p id="rec_status">Click the above button to start live transcription</p>
+                                        <button id="startRecButton" type="button" style="display: none;"> Start
+                                            recording
+                                        </button>
+                                        <button id="stopRecButton" type="button" style="display: none;"> Stop
+                                            recording
+                                        </button>
+                                    </div>
+                                    <div id="recordingStatus">&nbsp;</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card ">
+                                <div class="card-header card-header-rose card-header-icon">
+                                    <div class="card-icon">
+                                        <i class="material-icons">contacts</i>
+                                    </div>
+                                    <h4 class="card-title">Transcription here</h4>
+                                </div>
+                                <div class="card-body ">
+                                    <div>
+                                        <p id="ResultText"><span class="greyText">No Speech detected.<span>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% include partials/footer.ejs %>
+    </div>
+</div>
+<% include partials/footer_script.ejs %>
+<script>
+    $('#myrecbtn').addClass("notRec");
+
+    $('#myrecbtn').click(function () {
+        var b = $(this);
+        if ($(this).hasClass('notRec')) {
+            b.removeClass("notRec");
+            b.addClass("Rec");
+            $("#rec_status").text("Now transcribing live...")
+            $("#startRecButton").trigger("click");
+            //$(".ResultText").text("No Speech detected.")
+        } else {
+            b.removeClass("Rec");
+            b.addClass("notRec");
+            $("#rec_status").text("Click the above button to start live transcription")
+            $("#stopRecButton").trigger("click");
+        }
+    });
+</script>
+</body>
+</html>

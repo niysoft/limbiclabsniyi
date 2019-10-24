@@ -1,0 +1,165 @@
+#!/usr/bin/env node
+
+/**
+ * Module dependencies.
+ */
+
+var app = require('../app');
+var debug = require('debug')('untitled:server');
+var http = require('http');
+
+/**
+ * Get port from environment and store in Express.
+ */
+
+var port = normalizePort(process.env.PORT || '3000');
+app.set('port', port);
+
+/**
+ * Create HTTP server.
+ */
+
+var server = http.createServer(app);
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+const io = require('socket.io')(server);
+let speech = require('@google-cloud/speech'),
+    speechClient = new speech.SpeechClient(),
+    encoding = 'LINEAR16',
+    sampleRateHertz = 16000,
+    languageCode = 'en-US', //en-US
+    request = {
+        config: {
+            encoding: encoding,
+            sampleRateHertz: sampleRateHertz,
+            languageCode: languageCode,
+            profanityFilter: false,
+            enableWordTimeOffsets: true,
+            // speechContexts: [{
+            //     phrases: ["hoful","shwazil"]
+            //    }] // add your own speech context for better recognition
+        },
+        interimResults: true // If you want interim results, set this to true
+    };
+io.on('connection', function (client) {
+    console.log(io.toString() + "++++")
+    console.log('Client Connected to server through-->>>> socket');
+    recognizeStream = null;
+
+    client.on('join', function (data) {
+        client.emit('messages', 'Socket Connected to Server');
+    });
+
+    client.on('messages', function (data) {
+        client.emit('broad', data);
+    });
+
+    client.on('startGoogleCloudStream', function (data) {
+        startRecognitionStream(client, data);
+    });
+
+    client.on('endGoogleCloudStream', function (data) {
+        stopRecognitionStream();
+    });
+
+    client.on('binaryData', function (data) {
+        // console.log(data); //log binary data
+        if (recognizeStream !== null) {
+            recognizeStream.write(data);
+        }
+    });
+
+});
+
+function startRecognitionStream(client, data) {
+    recognizeStream = speechClient.streamingRecognize(request)
+        .on('error', console.error)
+        .on('data', (data) => {
+            process.stdout.write(
+                (data.results[0] && data.results[0].alternatives[0])
+                    ? `Transcription: ${data.results[0].alternatives[0].transcript}\n`
+                    : `\n\nReached transcription time limit, press Ctrl+C\n`);
+            client.emit('speechData', data);
+
+            // if end of utterance, let's restart stream
+            // this is a small hack. After 65 seconds of silence, the stream will still throw an error for speech length limit
+            if (data.results[0] && data.results[0].isFinal) {
+                stopRecognitionStream();
+                startRecognitionStream(client);
+                // console.log('restarted stream serverside');
+            }
+        });
+}
+
+function stopRecognitionStream() {
+    if (recognizeStream) {
+        recognizeStream.end();
+    }
+    recognizeStream = null;
+}
+
+server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+
+/**
+ * Normalize a port into a number, string, or false.
+ */
+
+function normalizePort(val) {
+    var port = parseInt(val, 10);
+
+    if (isNaN(port)) {
+        // named pipe
+        return val;
+    }
+
+    if (port >= 0) {
+        // port number
+        return port;
+    }
+
+    return false;
+}
+
+/**
+ * Event listener for HTTP server "error" event.
+ */
+
+function onError(error) {
+    if (error.syscall !== 'listen') {
+        throw error;
+    }
+
+    var bind = typeof port === 'string'
+        ? 'Pipe ' + port
+        : 'Port ' + port;
+
+    // handle specific listen errors with friendly messages
+    switch (error.code) {
+        case 'EACCES':
+            console.error(bind + ' requires elevated privileges');
+            process.exit(1);
+            break;
+        case 'EADDRINUSE':
+            console.error(bind + ' is already in use');
+            process.exit(1);
+            break;
+        default:
+            throw error;
+    }
+}
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+
+function onListening() {
+    var addr = server.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening on ' + bind);
+}

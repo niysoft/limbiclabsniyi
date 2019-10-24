@@ -1,0 +1,15 @@
+version: '3'
+services:
+  limbics:
+    container_name: limbics
+    restart: always
+    build: .
+    ports:
+      - '80:3000'
+    links:
+      - db
+  db:
+    container_name: db
+    image: mongo
+    ports:
+      - '27017:27017'

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="content-type" content="text/html;charset=utf-8"/><!-- /Added by HTTrack -->
+<head>
+    <% include partials/header_.ejs %>
+</head>
+<body class="off-canvas-sidebar">
+<noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-NKDMSK6" height="0" width="0"
+            style="display:none;visibility:hidden"></iframe>
+</noscript>
+<nav class="navbar navbar-expand-lg navbar-transparent navbar-absolute fixed-top text-white"
+     style="padding-top:5px !important">
+    <div class="container">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" aria-controls="navigation-index"
+                aria-expanded="false" aria-label="Toggle navigation">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+            <span class="navbar-toggler-icon icon-bar"></span>
+        </button>
+        <div class="collapse navbar-collapse justify-content-end">
+            <ul class="navbar-nav card-signup">
+                <li class="nav-item active">
+                    <a href="signup" class="nav-link">
+                        <i class="material-icons">person_add</i> Register
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="login" class="nav-link">
+                        <i class="material-icons">fingerprint</i> Login
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+    </div>
+</nav>
+<!-- End Navbar -->
+<div class="wrapper wrapper-full-page">
+    <div class="page-header register-page header-filter" filter-color="black"
+         style="background-image: url('assets/img/signup.jpg')">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-5 ml-auto mr-auto">
+                    <div class="card card-signup" style="margin-top: 1vh;margin-bottom: 10px">
+                        <h2 class="card-title text-center">Register</h2>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-12 mr-auto">
+                                    <!--  if (isSet(req.body.fullName) && isSet(req.body.email) && isSet(req.body.password) && isSet(req.body.phone)-->
+                                    <form method="POST" class="generalUpload" action="">
+                                        <div class="form-group has-default">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                            <span class="input-group-text">
+                              <i class="material-icons">face</i>
+                            </span>
+                                                </div>
+                                                <input type="text" name="fullName" class="form-control"
+                                                       placeholder="Full Name">
+                                            </div>
+                                        </div>
+                                        <div class="form-group has-default">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                            <span class="input-group-text">
+                              <i class="material-icons">mail</i>
+                            </span>
+                                                </div>
+                                                <input type="text" name="email" class="form-control"
+                                                       placeholder="Email...">
+                                            </div>
+                                        </div>
+                                        <div class="form-group has-default">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                            <span class="input-group-text">
+                              <i class="material-icons">mail</i>
+                            </span>
+                                                </div>
+                                                <input type="text" name="phone" class="form-control"
+                                                       placeholder="Mobile phone - 234xxxxxxx">
+                                            </div>
+                                        </div>
+                                        <div class="form-group has-default">
+                                            <div class="input-group">
+                                                <div class="input-group-prepend">
+                            <span class="input-group-text">
+                              <i class="material-icons">lock_outline</i>
+                            </span>
+                                                </div>
+                                                <input type="password" name="password" placeholder="Password..."
+                                                       class="form-control">
+                                            </div>
+                                        </div>
+                                        <div class="form-check">
+                                            <label class="form-check-label">
+                                                <input class="form-check-input" type="checkbox" value="" checked="">
+                                                <span class="form-check-sign">
+                            <span class="check"></span>
+                          </span>
+                                                I agree to the
+                                                <a href="#something">terms and conditions</a>.
+                                            </label>
+                                        </div>
+                                        <br>
+                                        <button class="btn btn-primary" type="submit">Sign Up!
+                                            <div class="ripple-container"></div>
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <% //include partials/footer.ejs  %>
+    </div>
+</div>
+<% include partials/footer_script.ejs %>
+</body>
+<script>
+    $(".generalUpload").attr("action",  "api/signup")
+    let formOptions = {
+        dataType: 'json',
+        // data:$('.generalUpload').serialize(),
+        beforeSubmit: function () {
+            $.blockUI({message: '<div class="lds-hourglass"></div>'});
+        },
+        success: function (responseText, statusText, xhr, $form) {
+            notie.alert({type: 'success', text: responseText.response_string, time: 10});
+            let response_string = responseText.response_string
+            setCookie("_id", responseText.data._id)
+            setTimeout(function () {
+                    location.href =   "/login"
+                },
+                2000);
+            $.unblockUI();
+        },
+        error: function (responseText, statusText, xhr, $form) {
+            let error_string = responseText.responseJSON.error_string
+            showInvalidDetailsError(error_string)
+            $.unblockUI()
+        }
+    };
+    $('.generalUpload').ajaxForm(formOptions);
+</script>
+</html>

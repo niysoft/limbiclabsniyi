@@ -1,0 +1,28 @@
+<style>
+    .nav-link-child{
+        margin-left: 40px !important;
+    }
+</style>
+<div class="sidebar" data-color="rose" data-background-color="black" data-image="../assets/img/sidebar-1.jpg">
+    <div class="logo">
+        <img src="../assets/img/user.png" style="width: 40px;margin-left: 20px;"/>
+        <div style="padding:20px;color:white;margin-bottom: -20px;"><%= userData.data.fullName  %></div>
+    </div>
+
+    <div class="sidebar-wrapper">
+        <ul class="nav">
+            <li class="nav-item ">
+                <a class="nav-link" href="speak">
+                    <i class="material-icons">collections</i>
+                    <p> speak/Transcribe</p>
+                </a>
+            </li>
+            <li class="nav-item ">
+                <a class="nav-link" href="logout">
+                    <i class="material-icons">exit_to_app</i>
+                    <p> Logout</p>
+                </a>
+            </li>
+        </ul>
+    </div>
+</div>
